@@ -40,10 +40,21 @@ test, and should be part of the protocol. Please, let me know your thoughts.
 
 
 ### Some links on Process Managers:
-http://blog.devarchive.net/2015/11/saga-vs-process-manager.html 
 http://codebetter.com/gregyoung/2012/04/24/state-machines-and-business-users-2/ 
 http://www.enterpriseintegrationpatterns.com/patterns/messaging/ProcessManager.html 
 
+[saga-vs-pm](http://blog.devarchive.net/2015/11/saga-vs-process-manager.html) -
+Saga vs Process manager
+
+[how-to-implement](http://softwareengineering.stackexchange.com/questions/332942/how-to-implement-a-process-manager-in-event-sourcing) - Important view on implementation
+[cqrs-with-sagas-01](http://blog.jonathanoliver.com/cqrs-sagas-with-event-sourcing-part-i-of-ii/)
+- Idempotency for free with FSMs!
+[cqrs-with-sagas](http://blog.jonathanoliver.com/cqrs-sagas-with-event-sourcing-part-ii-of-ii/)
+- Idempotency for free with FSMs!
+[events-are-decomposed-state](http://stackoverflow.com/questions/38121164/multiple-commands-for-single-process-in-cqrs)
+- how to avoid replay caos
+[cqrs-without-microsoft](http://udidahan.com/2012/03/29/a-cqrs-journey-with-and-without-microsoft/)
+- how to model business on your system
 
 
 
