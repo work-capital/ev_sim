@@ -27,6 +27,9 @@ defmodule EvSim.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:fsm, "~> 0.2.0"}]
+    [ {:fsm, "~> 0.2.0"},
+      {:effects, "~> 0.1.1"},
+      {:white_bread, "~> 2.8"}
+    ]
   end
 end

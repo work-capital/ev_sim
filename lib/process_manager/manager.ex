@@ -1,4 +1,4 @@
-  defmodule EvSim.Manager do
+  defmodule EvSim.ProcessManager.Manager do
     @moduledoc """
     TODO: how to send %ExpireOrder{} to a scheduller ? 
     process manager should receive commands ?
