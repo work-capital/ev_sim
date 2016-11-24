@@ -56,5 +56,9 @@ https://github.com/MicrosoftArchive/cqrs-journey/blob/0ec521933fc0fe2907096decbd
 Below the Process manager implemented in this example: 
 
 
-
 ![architecture](https://raw.githubusercontent.com/MicrosoftArchive/cqrs-journey/0ec521933fc0fe2907096decbdc9b110bba4a621/docs/images/Journey_03_Architecture_02.png)
+
+Note that the complete version, the Process Manager receives Commands, and
+aggregates receives Events
+
+![complete-flow](docs/complete-process-manager.png)
