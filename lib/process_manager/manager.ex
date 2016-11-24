@@ -12,6 +12,7 @@
     # COMMANDS
     alias EvSim.Order.Commands.{RegisterToConference, RejectOrder, MarkOrderAsBooked}
     alias EvSim.Conference.Commands.{MakeSeatReservation, CancelSeatReservation, CommitSeatReservation}
+    alias EvSim.ProcessManager.Commands.{ExpireOrder}
     alias EvSim.Payment.Commands.{MakePayment}
 
     # NON-STARTED
@@ -48,7 +49,7 @@
       end
 
       defevent handle(%PaymentReceived{} = payment), data: cmds do
-        next_state(:completed, cmds ++ [%PaymentReceived{}])
+        next_state(:completed, cmds ++ [%CommitSeatReservation{}])
       end
 
       defevent _,

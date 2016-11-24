@@ -29,7 +29,8 @@ defmodule EvSim.Mixfile do
   defp deps do
     [ {:fsm, "~> 0.2.0"},
       {:effects, "~> 0.1.1"},
-      {:white_bread, "~> 2.8"}
+      {:white_bread, "~> 2.8"},
+      {:mix_test_watch, "~> 0.2", only: :dev}
     ]
   end
 end
