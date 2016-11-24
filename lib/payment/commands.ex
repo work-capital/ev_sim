@@ -1,5 +1,5 @@
 defmodule EvSim.Payment.Commands do
-  defmodule PaymentAccepted,         
+  defmodule PaymentReceived,         
     do: defstruct [uuid: nil, source_id: nil, payment_source_id: nil]
   defmodule PaymentCompleted,         
     do: defstruct [uuid: nil, source_id: nil, payment_source_id: nil]

@@ -1,6 +1,18 @@
   defmodule EvSim.Manager do
+    @moduledoc """
+    TODO: how to send %ExpireOrder{} to a scheduller ? 
+    process manager should receive commands ?
+    """
     use Fsm
-    #alias EvSim.
+    # EVENTS
+    alias EvSim.Order.Events.{OrderPlaced}
+    alias EvSim.Payment.Events.{PaymentReceived}
+    alias EvSim.Conference.Events.{ReservationAccepted, ReservationRejected}
+
+    # COMMANDS
+    alias EvSim.Order.Commands.{RegisterToConference, RejectOrder, MarkOrderAsBooked}
+    alias EvSim.Conference.Commands.{MakeSeatReservation, CancelSeatReservation, CommitSeatReservation}
+    alias EvSim.Payment.Commands.{MakePayment}
 
     # NON-STARTED
     defstate non_started do
@@ -15,7 +27,7 @@
     # AWAITING RESERVATION CONFIRMATION
     defstate awaiting_reservation do
 
-      defevent handle(%ReservationAccepted{id: id} = reservation), data: cmds do
+      defevent handle(%ReservationAccepted{uuid: id} = reservation), data: cmds do
         next_state(:awaiting_payment, cmds ++ [%MarkOrderAsBooked{}, %ExpireOrder{}])
       end
 

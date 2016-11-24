@@ -1,7 +1,7 @@
 defmodule EvSim.Payment.Events do
   defmodule PaymentAccepted,         
     do: defstruct [uuid: nil, source_id: nil, payment_source_id: nil]
-  defmodule PaymentCompleted,         
+  defmodule PaymentReceived,         
     do: defstruct [uuid: nil, source_id: nil, payment_source_id: nil]
   defmodule PaymentInitiated,         
     do: defstruct [uuid: nil, source_id: nil, payment_source_id: nil]

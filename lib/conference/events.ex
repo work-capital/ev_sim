@@ -1,5 +1,5 @@
 defmodule EvSim.Conference.Events do
-  defmodule ConferenceCreated,         
+  defmodule ReservationAccepted,
     do: defstruct [uuid: nil]
   defmodule ConferenceEvent,
     do: defstruct [uuid: nil, name: nil, desc: nil, location: nil, slug: nil,
