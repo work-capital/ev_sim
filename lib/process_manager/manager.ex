@@ -1,67 +1,68 @@
-  defmodule EvSim.ProcessManager.Manager do
-    @moduledoc """
-    TODO: how to send %ExpireOrder{} to a scheduller ? 
-    process manager should receive commands ?
-    """
-    use Fsm
-    # EVENTS
-    alias EvSim.Order.Events.{OrderPlaced}
-    alias EvSim.Payment.Events.{PaymentReceived}
-    alias EvSim.Conference.Events.{ReservationAccepted, ReservationRejected}
+defmodule EvSim.ProcessManager.Manager do
+  @moduledoc """
+  TODO: how to send %ExpireOrder{} to a scheduller ?
+  process manager should receive commands ?
+  """
 
-    # COMMANDS
-    alias EvSim.Order.Commands.{RegisterToConference, RejectOrder, MarkOrderAsBooked}
-    alias EvSim.Conference.Commands.{MakeSeatReservation, CancelSeatReservation, CommitSeatReservation}
-    alias EvSim.ProcessManager.Commands.{ExpireOrder}
-    alias EvSim.Payment.Commands.{MakePayment}
+  # EVENTS
+  alias EvSim.Order.Events.{OrderPlaced}
+  alias EvSim.Payment.Events.{PaymentReceived}
+  alias EvSim.Conference.Events.{ReservationAccepted, ReservationRejected}
 
-    # NON-STARTED
-    defstate non_started do
+  # COMMANDS
+  alias EvSim.Order.Commands.{RegisterToConference, RejectOrder, MarkOrderAsBooked}
+  alias EvSim.Conference.Commands.{MakeSeatReservation, CancelSeatReservation, CommitSeatReservation}
+  alias EvSim.ProcessManager.Commands.{ExpireOrder}
+  alias EvSim.Payment.Commands.{MakePayment}
 
-      defevent handle(%OrderPlaced{} = order), data: cmds do
-         next_state(:awaiting_reservation, cmds ++ [%MakeSeatReservation{}])
-      end
+  use FsmProcessManager, initial_state: :non_started
 
-      defevent _, do: respond(:error)
+  # Commanded process manager routing
+  def interested?(%OrderPlaced{uuid: uuid}), do: {:start, uuid}
+  def interested?(%ReservationAccepted{uuid: uuid}), do: {:continue, uuid}
+  def interested?(%ReservationRejected{uuid: uuid}), do: {:continue, uuid}
+  def interested?(%PaymentReceived{uuid: uuid}), do: {:continue, uuid}
+
+  # NON-STARTED
+  defstate non_started do
+
+    defevent on(%OrderPlaced{uuid: uuid} = order) do
+       next_state(:awaiting_reservation, [%MakeSeatReservation{uuid: uuid}])
     end
 
-    # AWAITING RESERVATION CONFIRMATION
-    defstate awaiting_reservation do
-
-      defevent handle(%ReservationAccepted{uuid: id} = reservation), data: cmds do
-        next_state(:awaiting_payment, cmds ++ [%MarkOrderAsBooked{}, %ExpireOrder{}])
-      end
-
-
-      defevent handle(%ReservationRejected{} = reservation), data: cmds do
-        next_state(:completed, cmds ++ [%RejectOrder{}])
-      end
-
-      defevent _, do: respond(:error)
-
-    end
-
-    # AWAITING PAYMENT
-    defstate awaiting_payment do
-
-      defevent handle(%OrderPlaced{} = order), data: cmds do
-        next_state(:completed, cmds ++ [%CancelSeatReservation{}, %RejectOrder{}])
-      end
-
-      defevent handle(%PaymentReceived{} = payment), data: cmds do
-        next_state(:completed, cmds ++ [%CommitSeatReservation{}])
-      end
-
-      defevent _,
-        do: respond(:error)
-    end
-
-    # COMPLETED
-    defstate completed do
-      defevent _, do: respond(:error)
-    end
-
+    defevent _, do: respond(:error)
   end
 
+  # AWAITING RESERVATION CONFIRMATION
+  defstate awaiting_reservation do
 
+    defevent on(%ReservationAccepted{uuid: id} = reservation) do
+      next_state(:awaiting_payment, [%MarkOrderAsBooked{}, %ExpireOrder{}])
+    end
 
+    defevent on(%ReservationRejected{} = reservation) do
+      next_state(:completed, %RejectOrder{})
+    end
+
+    defevent _, do: respond(:error)
+  end
+
+  # AWAITING PAYMENT
+  defstate awaiting_payment do
+
+    defevent on(%OrderPlaced{} = order) do
+      next_state(:completed, [%CancelSeatReservation{}, %RejectOrder{}])
+    end
+
+    defevent on(%PaymentReceived{} = payment) do
+      next_state(:completed, [%CommitSeatReservation{}])
+    end
+
+    defevent _, do: respond(:error)
+  end
+
+  # COMPLETED
+  defstate completed do
+    defevent _, do: respond(:error)
+  end
+end
