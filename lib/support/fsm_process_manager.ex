@@ -9,7 +9,7 @@ defmodule FsmProcessManager do
       def handle(%__MODULE__{} = fsm, event) do
         fsm
         |> __MODULE__.on(event)
-        |> __MODULE__.data  # commands extracted from the FSM's data
+        |> __MODULE__.data  # commands extracted from the FSM's data to be sent by the prcess manager instance
       end
 
       def apply(%__MODULE__{state: nil} = fsm, event), do: __MODULE__.apply(__MODULE__.new, event)
@@ -19,7 +19,7 @@ defmodule FsmProcessManager do
           |> __MODULE__.on(event)
           |> __MODULE__.state
 
-        # extract and return just the FSM's state
+        # extract and return just the FSM's state, so in case of replay, commands are not sent again
         %__MODULE__{state: state}
       end
     end
